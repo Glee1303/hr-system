@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử hệ thống - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        <main class="main-content">
+            <div id="header-container"></div>
+            <div class="content-wrapper">
+                <div class="page-title-section">
+                    <h1>Lịch sử hệ thống</h1>
+                    <p>Theo dõi mọi thay đổi dữ liệu và hoạt động của người dùng</p>
+                </div>
+
+                <div class="bg-card">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0;">Nhật ký hoạt động</h3>
+                        <button class="btn-secondary" onclick="loadActivityLogs()">
+                            <i class="fas fa-sync-alt"></i> Tải lại
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Người thực hiện</th>
+                                    <th>Hành động</th>
+                                    <th>Chi tiết thay đổi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logTable">
+                                <!-- Data injected by lichsu.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/lichsu.js"></script>
+</body>
+
+</html>

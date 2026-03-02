@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Nghỉ Phép - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/nghiphep.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <div class="content-wrapper">
+                <!-- Page Title -->
+                <div class="page-title-section"
+                    style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 2rem;">
+                    <div>
+                        <h1>Quản lý nghỉ phép</h1>
+                        <p>Quản lý đơn xin nghỉ phép và số ngày nghỉ còn lại</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn-secondary">
+                            <i class="fas fa-filter"></i> Lọc dữ liệu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="stats-card">
+                        <div class="stats-icon gradient-warning" style="background: #fff7ed; color: #ea580c;">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Chờ duyệt</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon gradient-success" style="background: #f0fdf4; color: #16a34a;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Đã duyệt</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon gradient-primary" style="background: #eff6ff; color: #2563eb;">
+                            <i class="fas fa-calendar-minus"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Đang nghỉ</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon gradient-danger" style="background: #fef2f2; color: #dc2626;">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Từ chối</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Layout: Leave Requests Table + Balance Sidebar -->
+                <div class="leave-layout">
+
+                    <!-- Leave Requests Table -->
+                    <div class="bg-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <h3>Danh sách đơn xin nghỉ phép</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nhân viên</th>
+                                        <th>Loại nghỉ</th>
+                                        <th>Thời gian</th>
+                                        <th>Số ngày</th>
+                                        <th>Trạng thái</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaveTable">
+                                    <!-- Dynamic rows go here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Phân trang -->
+                        <div id="pagination-container"
+                            style="padding: 1rem; text-align: center; border-top: 1px solid #f1f5f9;">
+                        </div>
+                    </div>
+
+                </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/nghiphep.js"></script>
+</body>
+
+</html>

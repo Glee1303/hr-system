@@ -1,0 +1,127 @@
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 1rem 0;
+    min-height: 500px;
+    align-items: flex-start;
+}
+
+.kanban-column {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+
+.kanban-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.kanban-column-header h3 {
+    margin: 0;
+    font-size: var(--fs-md);
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.count-badge {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+}
+
+.kanban-list {
+    flex: 1;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.kanban-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: grab;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.kanban-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+}
+
+.card-header-cand {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.cand-name {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: var(--fs-base);
+}
+
+.btn-delete-cand {
+    border: none;
+    background: transparent;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    line-height: 1;
+}
+
+.btn-delete-cand:hover {
+    color: #ef4444;
+}
+
+.cand-info {
+    font-size: var(--fs-xs);
+    color: #64748b;
+}
+
+.cand-pos {
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+    color: #334155;
+}
+
+.kanban-ghost {
+    opacity: 0.4;
+    background: #e2e8f0;
+    border: 2px dashed #94a3b8;
+}
+
+#col-applied {
+    border-top: 4px solid #3b82f6;
+}
+
+#col-interview {
+    border-top: 4px solid #f59e0b;
+}
+
+#col-offer {
+    border-top: 4px solid #8b5cf6;
+}
+
+#col-hired {
+    border-top: 4px solid #10b981;
+}

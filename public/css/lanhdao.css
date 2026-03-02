@@ -1,0 +1,160 @@
+/* ==================== DASHBOARD LAYOUT & SPECIFIC COMPONENTS ==================== */
+
+/* TONGQUAN.CSS - Optimized to avoid redundancy with shared-styles.css */
+
+/* DASHBOARD GRID SYSTEM */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* TREND INDICATORS */
+.stats-change {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.trend-up {
+    color: #10b981;
+}
+
+.trend-up::before {
+    content: '↑';
+}
+
+.trend-down {
+    color: #ef4444;
+}
+
+.trend-down::before {
+    content: '↓';
+}
+
+.trend-neutral {
+    color: #94a3b8;
+}
+
+.trend-neutral::before {
+    content: '→';
+}
+
+/* CHART WRAPPERS */
+.chart-container {
+    height: 300px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#departmentChart {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* ACTIVITY FEED (Refined for Dashboard) */
+.activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.activity-item {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.875rem;
+}
+
+.activity-info {
+    flex: 1;
+}
+
+.activity-title {
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.125rem;
+}
+
+.activity-desc {
+    font-size: var(--fs-xs);
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.activity-time {
+    font-size: 0.7rem;
+    /* Keeping very small for timestamp */
+    color: #94a3b8;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+/* QUICK ACTIONS (Dashboard specific) */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.action-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-card:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+.action-card i {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: hsl(var(--primary));
+}
+
+.action-card span {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: #475569;
+}
+
+/* TABLE CARD SPECIFIC */
+.table-card .card-header {
+    border-bottom: none;
+    padding-bottom: 0.5rem;
+}

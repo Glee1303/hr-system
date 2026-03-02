@@ -1,0 +1,5 @@
+{"name":"Phòng Nhân sự","manager":"Lê Thị HR","email":"hr@company.com","status":"active","_id":"4RKOTbjf88nMSXqR","createdAt":{"$$date":1772444073838},"updatedAt":{"$$date":1772444073838}}
+{"name":"Phòng Kế toán","manager":"Hoàng Tài Chính","email":"accounting@company.com","status":"active","_id":"GpZbotgF5SQadlSA","createdAt":{"$$date":1772444073838},"updatedAt":{"$$date":1772444073838}}
+{"name":"Ban Giám Đốc","manager":"Nguyễn Văn A","email":"board@company.com","status":"active","_id":"dIs7C6RvLmljZrye","createdAt":{"$$date":1772444073837},"updatedAt":{"$$date":1772444073837}}
+{"name":"Phòng Kinh doanh","manager":"Phạm Thị Sale","email":"sales@company.com","status":"active","_id":"kBZQtxt5jv8A0IO5","createdAt":{"$$date":1772444073838},"updatedAt":{"$$date":1772444073838}}
+{"name":"Phòng Kỹ thuật","manager":"Trần Công Nghệ","email":"tech@company.com","status":"active","_id":"zqx3nOIXjaw4gwLD","createdAt":{"$$date":1772444073838},"updatedAt":{"$$date":1772444073838}}

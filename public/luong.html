@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Lương & Báo cáo - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/luong.css">
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <div class="content-wrapper">
+                <!-- Page Title -->
+                <div class="page-title-section"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h1>Quản lý Lương & Thống kê</h1>
+                        <p>Tính toán lương tự động và báo cáo hiệu suất</p>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn-secondary" onclick="exportSalaryToExcel()"
+                            style="background: #ecfdf5; color: #059669; border: 1px solid #10b981;">
+                            <i class="fas fa-file-excel"></i> Xuất Excel
+                        </button>
+                        <button class="btn-primary" onclick="openCreateSalaryModal()">
+                            <i class="fas fa-plus"></i> Tạo bảng lương mới
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters & Stats -->
+                <div class="filter-section bg-card" style="padding: 1.5rem; margin-bottom: 2rem;">
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; align-items: end;">
+                        <div class="form-group" style="margin: 0;">
+                            <label
+                                style="font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 0.5rem; display: block;">Lọc
+                                theo tháng</label>
+                            <input type="month" id="filterMonth" class="form-control" style="width: 100%;">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label
+                                style="font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 0.5rem; display: block;">Phòng
+                                ban</label>
+                            <select id="filterDepartment" class="form-control" style="width: 100%;">
+                                <option value="">Tất cả phòng ban</option>
+                                <option value="Bảo vệ">Bảo vệ</option>
+                                <option value="Kinh doanh">Kinh doanh</option>
+                                <option value="Kỹ thuật">Kỹ thuật</option>
+                                <option value="Hành chính">Hành chính</option>
+                                <option value="Kế toán">Kế toán</option>
+                                <option value="Tiếp thị">Tiếp thị</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label
+                                style="font-size: 0.875rem; font-weight: 500; color: #64748b; margin-bottom: 0.5rem; display: block;">Trạng
+                                thái</label>
+                            <select id="filterStatus" class="form-control" style="width: 100%;">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="paid">Đã thanh toán</option>
+                                <option value="pending">Chờ thanh toán</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-primary" onclick="applyFilters()" style="flex: 1;">
+                                <i class="fas fa-filter"></i> Lọc
+                            </button>
+                            <button class="btn-secondary" onclick="resetFilters()" title="Làm mới">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salary Table Card -->
+                <div class="bg-card" style="margin-bottom: 2rem;">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0;"><i class="fas fa-money-check-alt"
+                                style="margin-right: 0.5rem; color: #6366f1;"></i> Danh sách lương</h3>
+                        <div id="paginationInfo" style="font-size: 0.875rem; color: #64748b;"></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    <th>Lương cơ bản</th>
+                                    <th>Phụ cấp</th>
+                                    <th>Thưởng</th>
+                                    <th>Khấu trừ (Chấm công)</th>
+                                    <th>Thực lĩnh</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salaryTable">
+                                <!-- Data injected by luong.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="paginationContainer"
+                        style="padding: 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: center;">
+                    </div>
+                </div>
+
+                <!-- Dashboard Charts (Hidden by default or moved below management) -->
+                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 3rem 0;">
+
+                <div class="page-title-section">
+                    <h2>Báo cáo hiệu suất & Thống kê</h2>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <span class="chart-title">Tăng trưởng nhân sự</span>
+                        </div>
+                        <div class="chart-placeholder">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <span class="chart-title">Phân bổ theo phòng ban</span>
+                        </div>
+                        <div class="chart-placeholder">
+                            <canvas id="deptChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Create Salary Modal -->
+    <div class="modal-overlay" id="createSalaryModal">
+        <div class="modal-content" style="max-width: 1200px; width: 95%;">
+            <div class="modal-header">
+                <h3><i class="fas fa-calculator"></i> Tính lương tháng mới</h3>
+                <button class="close-modal" onclick="closeCreateSalaryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="create-salary-header"
+                    style="display: flex; gap: 1rem; margin-bottom: 1.5rem; background: #f8fafc; padding: 1rem; border-radius: 0.5rem;">
+                    <div class="form-group" style="margin: 0;">
+                        <label>Tháng</label>
+                        <select id="createSalaryMonth" class="form-control">
+                            <option value="01">Tháng 1</option>
+                            <option value="02">Tháng 2</option>
+                            <option value="03">Tháng 3</option>
+                            <option value="04">Tháng 4</option>
+                            <option value="05">Tháng 5</option>
+                            <option value="06">Tháng 6</option>
+                            <option value="07">Tháng 7</option>
+                            <option value="08">Tháng 8</option>
+                            <option value="09">Tháng 9</option>
+                            <option value="10">Tháng 10</option>
+                            <option value="11">Tháng 11</option>
+                            <option value="12">Tháng 12</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label>Năm</label>
+                        <input type="number" id="createSalaryYear" class="form-control" value="2026">
+                    </div>
+                    <div style="display: flex; align-items: flex-end; flex-grow: 1; justify-content: flex-end;">
+                        <p style="font-size: 0.875rem; color: #64748b; font-style: italic;">
+                            <i class="fas fa-info-circle"></i> Hệ thống tự động tính khấu trừ dựa trên dữ liệu chấm
+                            công.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="employeeSalaryInputs" style="max-height: 500px; overflow-y: auto;">
+                    <!-- Table generated by luong.js -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeCreateSalaryModal()">Hủy</button>
+                <button class="btn-primary" onclick="submitCreateSalaries()">
+                    <i class="fas fa-save"></i> Lưu bảng lương
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Salary Modal -->
+    <div class="modal-overlay" id="editSalaryModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Chỉnh sửa lương</h3>
+                <button class="close-modal" onclick="closeEditSalaryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editSalaryId">
+                <div class="form-group">
+                    <label>Lương cơ bản</label>
+                    <input type="number" id="editSalaryBase" class="form-control" oninput="updateEditSalaryNet()">
+                </div>
+                <div class="form-group">
+                    <label>Phụ cấp</label>
+                    <input type="number" id="editSalaryAllowance" class="form-control" oninput="updateEditSalaryNet()">
+                </div>
+                <div class="form-group">
+                    <label>Thưởng</label>
+                    <input type="number" id="editSalaryBonus" class="form-control" oninput="updateEditSalaryNet()">
+                </div>
+                <div class="form-group">
+                    <label>Khấu trừ</label>
+                    <input type="number" id="editSalaryDeduction" class="form-control" oninput="updateEditSalaryNet()">
+                </div>
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <select id="editSalaryStatus" class="form-control">
+                        <option value="pending">Chờ thanh toán</option>
+                        <option value="paid">Đã thanh toán</option>
+                    </select>
+                </div>
+                <div
+                    style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 500;">Thực nhận:</span>
+                    <span id="editSalaryNet" style="font-weight: 700; color: #166534; font-size: 1.25rem;">0 ₫</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeEditSalaryModal()">Hủy</button>
+                <button class="btn-primary" onclick="saveEditSalary()">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Salary Modal -->
+    <div class="modal-overlay" id="viewSalaryModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Chi tiết phiếu lương</h3>
+                <button class="close-modal" onclick="closeViewSalaryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nhân viên:</strong> <span id="viewSalaryEmployeeName"></span></p>
+                <p><strong>Tháng:</strong> <span id="viewSalaryMonthYear"></span></p>
+                <hr>
+                <p><strong>Lương cơ bản:</strong> <span id="viewSalaryBase"></span></p>
+                <p><strong>Phụ cấp:</strong> <span id="viewSalaryAllowance"></span></p>
+                <p><strong>Thưởng:</strong> <span id="viewSalaryBonus"></span></p>
+                <p><strong>Khấu trừ:</strong> <span id="viewSalaryDeduction"></span></p>
+                <hr>
+                <p><strong>Thực lĩnh:</strong> <span id="viewSalaryNet"
+                        style="font-weight: 700; color: #166534;"></span></p>
+                <p><strong>Trạng thái:</strong> <span id="viewSalaryStatus"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeViewSalaryModal()">Đóng</button>
+                <button class="btn-primary" onclick="downloadPayslipPDF()" style="background: #4f46e5;">
+                    <i class="fas fa-file-pdf"></i> Tải phiếu lương (PDF)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/luong.js"></script>
+</body>
+
+</html>

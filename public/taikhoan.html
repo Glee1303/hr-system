@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài Đặt Tài Khoản - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/taikhoan.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <div class="content-wrapper">
+                <!-- Page Title -->
+                <div class="page-title-section" style="max-width: 1200px; margin: 0 auto 2rem;">
+                    <h1>Cài đặt</h1>
+                    <p>Quản lý thông tin tài khoản và tùy chọn hệ thống</p>
+                </div>
+
+                <div class="settings-container">
+                    <!-- Settings Tabs -->
+                    <div class="settings-sidebar">
+                        <button class="settings-tab active" data-section="profile">
+                            <i class="far fa-user"></i> Hồ sơ
+                        </button>
+                        <button class="settings-tab" data-section="notifications">
+                            <i class="far fa-bell"></i> Thông báo
+                        </button>
+                        <button class="settings-tab" data-section="security">
+                            <i class="fas fa-shield-alt"></i> Bảo mật
+                        </button>
+                        <button class="settings-tab" data-section="interface">
+                            <i class="fas fa-paint-brush"></i> Giao diện
+                        </button>
+                        <button class="settings-tab admin-only" data-section="company">
+                            <i class="far fa-building"></i> Công ty
+                        </button>
+                    </div>
+
+                    <!-- Settings Content -->
+                    <div class="settings-content-card" style="background: none; box-shadow: none; padding: 0;">
+                        <!-- Profile Section -->
+                        <div id="section-profile" class="settings-section active">
+                            <div class="form-premium-container">
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-id-card"></i>
+                                        <span>Thông tin cá nhân</span>
+                                    </div>
+                                    <div class="avatar-upload-area" style="margin-bottom: 2rem;">
+                                        <img src="https://ui-avatars.com/api/?name=Nguyen+Van+An&background=0D8ABC&color=fff"
+                                            class="avatar-preview" id="profile-avatar" alt="Avatar">
+                                        <div>
+                                            <button class="btn-secondary"
+                                                style="margin-bottom: 0.5rem; font-size: 0.8rem; padding: 0.5rem 1rem;">
+                                                <i class="fas fa-camera"></i> Thay đổi ảnh
+                                            </button>
+                                            <p style="font-size: 0.75rem; color: #64748b;">JPG, PNG tối đa 2MB</p>
+                                        </div>
+                                    </div>
+
+                                    <form id="profile-form">
+                                        <div class="form-grid">
+                                            <div class="portal-form-group">
+                                                <label>Họ và tên</label>
+                                                <input type="text" id="prof-fullName" class="portal-input"
+                                                    placeholder="Họ và tên">
+                                            </div>
+                                            <div class="portal-form-group">
+                                                <label>Số điện thoại</label>
+                                                <input type="text" id="prof-phone" class="portal-input"
+                                                    placeholder="Số điện thoại">
+                                            </div>
+                                        </div>
+                                        <div class="form-grid">
+                                            <div class="portal-form-group">
+                                                <label>Email liên hệ</label>
+                                                <input type="email" id="prof-email" class="portal-input"
+                                                    placeholder="Email">
+                                            </div>
+                                            <div class="portal-form-group">
+                                                <label>Phòng ban</label>
+                                                <input type="text" id="prof-dept" class="portal-input" readonly
+                                                    style="background: #f1f5f9; cursor: not-allowed;">
+                                            </div>
+                                        </div>
+                                        <div class="portal-form-group" style="margin-bottom: 2rem;">
+                                            <label>Giới thiệu bản thân</label>
+                                            <textarea id="prof-bio" class="portal-textarea" rows="4"
+                                                placeholder="Một vài dòng về bạn..."></textarea>
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <button type="submit" class="btn-primary" style="min-width: 160px;">
+                                                <i class="fas fa-save"></i> Lưu hồ sơ
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications Section -->
+                        <div id="section-notifications" class="settings-section">
+                            <div class="form-premium-container">
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-bell"></i>
+                                        <span>Cấu hình thông báo</span>
+                                    </div>
+                                    <p class="section-desc" style="margin-bottom: 1.5rem; color: #64748b;">Quản lý cách
+                                        bạn nhận thông tin từ hệ thống.</p>
+
+                                    <div class="settings-list">
+                                        <div class="settings-item"
+                                            style="padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
+                                            <div class="settings-info">
+                                                <h4 style="margin: 0; color: #1e293b;">Thông báo Email</h4>
+                                                <p style="margin: 0.25rem 0 0; font-size: 0.875rem; color: #64748b;">
+                                                    Nhận cập nhật về các thay đổi quan trọng qua email.</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="notify-email" checked>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                        <div class="settings-item"
+                                            style="padding: 1rem 0; border-bottom: 1px solid #f1f5f9;">
+                                            <div class="settings-info">
+                                                <h4 style="margin: 0; color: #1e293b;">Thông báo trình duyệt</h4>
+                                                <p style="margin: 0.25rem 0 0; font-size: 0.875rem; color: #64748b;">
+                                                    Hiển thị thông báo ngay khi có tin nhắn hoặc cập nhật mới.</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="notify-browser" checked>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                        <div class="settings-item" style="padding: 1rem 0;">
+                                            <div class="settings-info">
+                                                <h4 style="margin: 0; color: #1e293b;">Tin tức công ty</h4>
+                                                <p style="margin: 0.25rem 0 0; font-size: 0.875rem; color: #64748b;">
+                                                    Nhận thông tin về các hoạt động và sự kiện.</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="notify-news">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Section -->
+                        <div id="section-security" class="settings-section">
+                            <div class="form-premium-container">
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-lock"></i>
+                                        <span>Bảo mật & Mật khẩu</span>
+                                    </div>
+                                    <form id="password-form">
+                                        <div class="portal-form-group">
+                                            <label>Mật khẩu hiện tại</label>
+                                            <input type="password" id="curr-pass" class="portal-input" required
+                                                placeholder="••••••••">
+                                        </div>
+                                        <div class="form-grid">
+                                            <div class="portal-form-group">
+                                                <label>Mật khẩu mới</label>
+                                                <input type="password" id="new-pass" class="portal-input" required
+                                                    placeholder="Tối thiểu 8 ký tự">
+                                            </div>
+                                            <div class="portal-form-group">
+                                                <label>Xác nhận mật khẩu mới</label>
+                                                <input type="password" id="conf-pass" class="portal-input" required
+                                                    placeholder="Nhập lại mật khẩu mới">
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                                            <button type="submit" class="btn-primary">
+                                                <i class="fas fa-key"></i> Đổi mật khẩu
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="form-section"
+                                    style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Xác thực nâng cao</span>
+                                    </div>
+                                    <div class="settings-item"
+                                        style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div class="settings-info">
+                                            <h4 style="margin: 0;">Xác thực 2 yếu tố (2FA)</h4>
+                                            <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.875rem;">Bảo vệ
+                                                tài khoản qua tin nhắn SMS hoặc ứng dụng bảo mật.</p>
+                                        </div>
+                                        <button class="btn-secondary" style="white-space: nowrap;">Kích hoạt</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interface Section -->
+                        <div id="section-interface" class="settings-section">
+                            <div class="form-premium-container">
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-palette"></i>
+                                        <span>Giao diện & Chủ đề</span>
+                                    </div>
+                                    <div class="interface-grid">
+                                        <div class="theme-card active" data-theme="light">
+                                            <div class="theme-preview light"></div>
+                                            <span>Sáng (Light)</span>
+                                        </div>
+                                        <div class="theme-card" data-theme="dark">
+                                            <div class="theme-preview dark"></div>
+                                            <span>Tối (Dark)</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top: 2.5rem;">
+                                        <h4 style="margin-bottom: 1rem; color: #1e293b;">Màu sắc chủ đạo</h4>
+                                        <div class="color-picker" style="display: flex; gap: 1rem;">
+                                            <div class="color-swatch active" style="background: #2563eb;"
+                                                data-color="blue"></div>
+                                            <div class="color-swatch" style="background: #8b5cf6;" data-color="purple">
+                                            </div>
+                                            <div class="color-swatch" style="background: #ef4444;" data-color="red">
+                                            </div>
+                                            <div class="color-swatch" style="background: #10b981;" data-color="green">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Company Section -->
+                        <div id="section-company" class="settings-section">
+                            <div class="form-premium-container">
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-building"></i>
+                                        <span>Cấu hình công ty</span>
+                                    </div>
+                                    <p class="section-desc" style="color: #64748b; margin-bottom: 1.5rem;">Thông tin
+                                        pháp lý và thiết lập vận hành hệ thống (Admin).</p>
+
+                                    <form id="company-form">
+                                        <div class="form-grid">
+                                            <div class="portal-form-group">
+                                                <label>Tên doanh nghiệp</label>
+                                                <input type="text" id="comp-name" class="portal-input"
+                                                    value="HRM Pro Solution">
+                                            </div>
+                                            <div class="portal-form-group">
+                                                <label>Mã số thuế</label>
+                                                <input type="text" id="comp-tax" class="portal-input"
+                                                    value="0123456789">
+                                            </div>
+                                        </div>
+                                        <div class="portal-form-group">
+                                            <label>Địa chỉ trụ sở</label>
+                                            <input type="text" id="comp-address" class="portal-input"
+                                                value="123 Đường ABC, Quận 1, TP. HCM">
+                                        </div>
+                                        <div class="form-grid">
+                                            <div class="portal-form-group">
+                                                <label>Giờ bắt đầu làm việc</label>
+                                                <input type="time" id="comp-start" class="portal-input" value="08:00">
+                                            </div>
+                                            <div class="portal-form-group">
+                                                <label>Giờ kết thúc làm việc</label>
+                                                <input type="time" id="comp-end" class="portal-input" value="17:30">
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                                            <button type="submit" class="btn-primary" style="min-width: 160px;">
+                                                <i class="fas fa-check-circle"></i> Cập nhật cấu hình
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/taikhoan-settings.js"></script>
+</body>
+
+</html>

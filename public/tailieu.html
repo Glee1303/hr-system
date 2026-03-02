@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Tài Liệu - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/tailieu.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <div class="content-wrapper">
+                <!-- Page Title -->
+                <div class="page-title-section"
+                    style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                    <div>
+                        <h1>Quản lý tài liệu</h1>
+                        <p>Lưu trữ và quản lý hồ sơ, hợp đồng, chứng từ</p>
+                    </div>
+                    <button class="btn-primary" onclick="toggleUploadForm()" id="toggleUploadBtn">
+                        <i class="fas fa-cloud-upload-alt"></i> <span id="toggleUploadBtnText">Tải lên tài liệu</span>
+                    </button>
+                </div>
+
+                <!-- INLINE UPLOAD FORM -->
+                <div id="uploadFormContainer" class="form-premium-container"
+                    style="display: none; margin-bottom: 2.5rem;">
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-file-upload"></i>
+                            <span id="uploadEmployeeName">Tải lên tài liệu</span>
+                        </div>
+                        <input type="hidden" id="uploadEmployeeId">
+
+                        <div class="form-grid">
+                            <div class="portal-form-group">
+                                <label>Tên tài liệu *</label>
+                                <input type="text" id="docName" class="portal-input"
+                                    placeholder="VD: Hợp đồng lao động - 2024">
+                            </div>
+                            <div class="portal-form-group">
+                                <label>Loại tài liệu *</label>
+                                <select id="docType" class="portal-select">
+                                    <option value="contract">Hợp đồng</option>
+                                    <option value="insurance">Bảo hiểm</option>
+                                    <option value="certificate">Chứng chỉ</option>
+                                    <option value="other">Khác</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="portal-form-group">
+                                <label>Định dạng file dự kiến *</label>
+                                <select id="docFileType" class="portal-select">
+                                    <option value="pdf">PDF</option>
+                                    <option value="doc">Word (doc, docx)</option>
+                                    <option value="excel">Excel (xls, xlsx)</option>
+                                    <option value="image">Hình ảnh (jpg, png...)</option>
+                                </select>
+                            </div>
+                            <div class="portal-form-group">
+                                <label>Chọn File *</label>
+                                <input type="file" id="docFile" class="portal-input" onchange="handleFileSelect(event)"
+                                    style="padding: 0.5rem;">
+                            </div>
+                        </div>
+
+                        <div id="filePreview" style="margin-top: 1rem;"></div>
+
+                        <div
+                            style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                            <button class="btn-secondary" onclick="toggleUploadForm()" style="min-width: 120px;">Hủy
+                                bỏ</button>
+                            <button class="btn-primary" onclick="saveDocumentInline()" style="min-width: 160px;">
+                                <i class="fas fa-check-circle"></i> Xác nhận tải lên
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Browser Layout -->
+                <div class="document-browser" style="display: grid; grid-template-columns: 320px 1fr; gap: 2rem;">
+                    <!-- Left: Employee Explorer -->
+                    <div class="employee-explorer">
+                        <div class="bg-card" style="height: 100%;">
+                            <div class="card-header">
+                                <h3 class="card-title">Nhân sự</h3>
+                            </div>
+                            <div id="employeeListContainer" class="employee-list-scrollable"
+                                style="max-height: 700px; overflow-y: auto; padding: 1rem;">
+                                <!-- Dynamic Loading -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Document View -->
+                    <div class="document-view">
+                        <!-- Stats Cards -->
+                        <div id="documentStatsContainer" style="margin-bottom: 2rem;"></div>
+
+                        <div class="bg-card">
+                            <div class="card-header" style="justify-content: space-between;">
+                                <h3 class="card-title">Kho tài liệu</h3>
+                                <div id="filterButtonsContainer" class="filter-group">
+                                    <!-- Dynamic Tabs -->
+                                </div>
+                            </div>
+
+                            <div id="documentsGrid" class="doc-grid" style="padding: 1.5rem;">
+                                <!-- Dynamic Grid -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/tailieu.js"></script>
+</body>
+
+</html>

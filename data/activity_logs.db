@@ -1,0 +1,5 @@
+{"action":"SYSTEM_START","userName":"system","details":"Hệ thống khởi động chế độ Model","createdAt":{"$$date":1772444073969},"_id":"KdweHEY5oP1oEhPm","updatedAt":{"$$date":1772444073969}}
+{"action":"LOGIN","userId":"K1Faea66FkJh4rZ5","userName":"admin","details":"admin đăng nhập hệ thống (Role: admin)","_id":"n5kOxbAdd7km5Jtj","createdAt":{"$$date":1772444753298},"updatedAt":{"$$date":1772444753298}}
+{"action":"UPDATE_CONFIG","userName":"admin","details":"Cập nhật cấu hình tính lương 2024","createdAt":{"$$date":1772444073969},"_id":"oeuusPXPjNNiQDJy","updatedAt":{"$$date":1772444073969}}
+{"action":"SEED_DATA","userName":"admin","details":"Nạp dữ liệu mô hình nhân sự chuyên nghiệp","createdAt":{"$$date":1772444073969},"_id":"qcRJpoNiR6WalwfG","updatedAt":{"$$date":1772444073969}}
+{"action":"LOGIN","userId":"JAjkRtP5ZMeLY1et","userName":"hr_mgr","details":"hr_mgr đăng nhập hệ thống (Role: manager)","_id":"qmPGUgHvHbGP4EWi","createdAt":{"$$date":1772446586204},"updatedAt":{"$$date":1772446586204}}

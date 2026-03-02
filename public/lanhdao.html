@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lãnh đạo - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/lanhdao.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <!-- PAGE CONTENT -->
+            <div class="content-wrapper">
+                <div class="page-title-section">
+                    <h1>Tổng quan hệ thống</h1>
+                    <p>Chào mừng trở lại! Dưới đây là tình hình nhân sự hiện tại.</p>
+                </div>
+
+                <!-- DASHBOARD STAT CARDS -->
+                <div class="stats-grid">
+                    <!-- Card 1: Total Employees -->
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <p class="stats-label">Tổng nhân viên</p>
+                            <h3 id="totalEmployees" class="stats-value">-</h3>
+                            <div class="stats-change trend-up">
+                                <!-- Dynamic check in lanhdao.js -->
+                            </div>
+                        </div>
+                        <div class="stats-icon" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Departments -->
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <p class="stats-label">Phòng ban</p>
+                            <h3 id="totalDepartments" class="stats-value">-</h3>
+                            <div class="stats-change trend-neutral">
+                            </div>
+                        </div>
+                        <div class="stats-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: New Hires -->
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <p class="stats-label">Nhân viên mới</p>
+                            <h3 id="newHiresThisMonth" class="stats-value">-</h3>
+                            <div class="stats-change trend-up">
+                            </div>
+                        </div>
+                        <div class="stats-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: On Leave -->
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <p class="stats-label">Đang nghỉ phép</p>
+                            <h3 id="onLeaveToday" class="stats-value">-</h3>
+                            <div class="stats-change trend-down">
+                            </div>
+                        </div>
+                        <div class="stats-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DASHBOARD GRID -->
+                <div class="dashboard-grid">
+                    <!-- Left Column: Recent Employees Table -->
+                    <div class="left-col">
+                        <div class="bg-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Nhân viên mới nhất</h3>
+                                <button class="btn-link" onclick="window.location.href='quanlynhanvien.html'">Xem tất
+                                    cả</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="modern-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Họ tên</th>
+                                            <th>Chức vụ</th>
+                                            <th>Phòng ban</th>
+                                            <th>Ngày vào</th>
+                                            <th>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="newEmployeesTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Charts & Activity -->
+                    <div class="right-col" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Chart Card -->
+                        <div class="bg-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Phân bổ nhân sự</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="chart-container">
+                                    <canvas id="departmentChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Feed -->
+                        <div class="bg-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Hoạt động gần đây</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="activity-feed">
+                                    <!-- Dynamic loading -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/lanhdao.js"></script>
+</body>
+
+</html>

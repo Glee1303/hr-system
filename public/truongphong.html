@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Nhân Viên - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/nhanvien.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="employee-portal">
+    <div class="app-container" style="display: block;"> <!-- Overriding default flex -->
+        <!-- FLOATING SIDE NAVIGATION (Auto-hide logic) -->
+        <div class="nav-trigger-zone"></div>
+        <div id="header-container"></div>
+
+        <!-- MAIN HUB CONTENT -->
+        <main class="portal-hub">
+
+            <!-- Dashboard View -->
+            <div id="dashboard-tab" class="tab-content transition-fade">
+                <div class="portal-header">
+                    <h1 class="portal-title" id="greeting">Chào buổi sáng!</h1>
+                    <p class="portal-subtitle">Hôm nay là một ngày tuyệt vời để làm việc hiệu quả.</p>
+                </div>
+
+                <div class="bento-grid">
+                    <!-- Attendance Card -->
+                    <div class="hub-card card-large card-accent-blue">
+                        <div class="hub-card-header">
+                            <h3>Chấm Công Hôm Nay</h3>
+                            <div class="hub-card-icon"><i class="fas fa-clock"></i></div>
+                        </div>
+                        <div class="card-content-main">
+                            <div class="big-stat" id="currentInTime">--:--</div>
+                            <p class="stat-desc">Thời gian ghi nhận vào</p>
+                        </div>
+                        <div class="card-footer-actions" style="flex-direction: column; gap: 0.75rem;">
+                            <button class="btn-premium btn-premium-primary" onclick="toggleCheckInForm()"
+                                id="toggleCheckInBtn" style="width: 100%;">
+                                <i class="fas fa-fingerprint"></i> Chấm công ngay
+                            </button>
+                            <!-- Inline Check-in Form -->
+                            <div id="checkInFormContainer"
+                                style="display: none; width: 100%; border-top: 1px dashed rgba(255,255,255,0.3); padding-top: 1rem; text-align: left;">
+                                <div
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <div class="portal-form-group" style="margin-bottom: 0;">
+                                        <label style="color: rgba(255,255,255,0.9); font-size: 0.8rem;">Giờ vào
+                                            (In)</label>
+                                        <input type="time" id="checkInTime" class="portal-input"
+                                            style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                                        <div id="checkInTimeError" class="error-text" style="color: #fca5a5;"></div>
+                                    </div>
+                                    <div class="portal-form-group" style="margin-bottom: 0;">
+                                        <label style="color: rgba(255,255,255,0.9); font-size: 0.8rem;">Giờ ra
+                                            (Out)</label>
+                                        <input type="time" id="checkOutTime" class="portal-input"
+                                            style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                                        <div id="checkOutTimeError" class="error-text" style="color: #fca5a5;"></div>
+                                    </div>
+                                </div>
+                                <div class="portal-form-group" style="margin-bottom: 1rem;">
+                                    <label style="color: rgba(255,255,255,0.9); font-size: 0.8rem;">Ghi chú</label>
+                                    <textarea id="checkInNote" class="portal-textarea"
+                                        placeholder="Hôm nay bạn đã làm được gì?"
+                                        style="min-height: 60px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 0.875rem;"
+                                        rows="2"></textarea>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                    <button class="btn-premium" onclick="toggleCheckInForm()"
+                                        style="padding: 0.5rem 1rem; font-size: 0.875rem; background: rgba(255,255,255,0.2); color: white; border: none;">Đóng</button>
+                                    <button class="btn-premium" onclick="submitCheckIn()"
+                                        style="padding: 0.5rem 1rem; font-size: 0.875rem; background: white; color: var(--portal-primary); border: none; font-weight: 600;">Xác
+                                        nhận</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leave Card -->
+                    <div class="hub-card card-accent-green">
+                        <div class="hub-card-header">
+                            <h3>Phép Năm</h3>
+                            <div class="hub-card-icon" style="color: #10b981; background: #ecfdf5;"><i
+                                    class="fas fa-umbrella-beach"></i></div>
+                        </div>
+                        <div class="card-content-main">
+                            <div class="big-stat" id="remainingLeaveCount">12</div>
+                            <p class="stat-desc">Ngày nghỉ còn lại</p>
+                        </div>
+                    </div>
+
+                    <!-- Salary Card -->
+                    <div class="hub-card card-accent-orange">
+                        <div class="hub-card-header">
+                            <h3>Lương Dự Tính</h3>
+                            <div class="hub-card-icon" style="color: #f59e0b; background: #fffbeb;"><i
+                                    class="fas fa-money-bill-wave"></i></div>
+                        </div>
+                        <div class="card-content-main">
+                            <div class="big-stat" id="pendingSalary" style="font-size: 2rem;">Đang tính...</div>
+                            <p class="stat-desc">Kỳ lương hiện tại</p>
+                        </div>
+                    </div>
+
+                    <!-- Request Card -->
+                    <div class="hub-card card-accent-red">
+                        <div class="hub-card-header">
+                            <h3>Yêu Cầu Chờ Duyệt</h3>
+                            <div class="hub-card-icon" style="color: #ef4444; background: #fef2f2;"><i
+                                    class="fas fa-hourglass-half"></i></div>
+                        </div>
+                        <div class="card-content-main">
+                            <div class="big-stat" id="pendingRequestsCount">0</div>
+                            <p class="stat-desc">Đơn đang xử lý</p>
+                        </div>
+                        <div class="card-footer-actions">
+                            <button class="btn-premium btn-premium-secondary" style="width: 100%;"
+                                onclick="window.location.hash='#leave'">
+                                Xem chi tiết
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance List View -->
+            <div id="attendance-tab" class="tab-content transition-fade" style="display: none;">
+                <div class="portal-header">
+                    <h1 class="portal-title">Lịch Sử Chấm Công</h1>
+                    <p class="portal-subtitle">Ghi nhận thời gian làm việc chính xác hàng ngày</p>
+                </div>
+                <!-- Reuse table styles from shared-styles or add portal-specific ones -->
+                <div class="bg-card p-6 shadow-card">
+                    <div class="modern-table-container">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Giờ Vào</th>
+                                    <th>Giờ Ra</th>
+                                    <th>Trạng Thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employeeAttendanceTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leave View -->
+            <div id="leave-tab" class="tab-content transition-fade" style="display: none;">
+                <div class="portal-header">
+                    <h1 class="portal-title">Nghỉ Phép & Phép Năm</h1>
+                    <p class="portal-subtitle">Quản lý quỹ thời gian nghỉ và gửi yêu cầu nghỉ phép mới</p>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn-premium btn-premium-primary" onclick="toggleLeaveForm()" id="toggleLeaveBtn">
+                        <i class="fas fa-plus"></i> <span id="toggleLeaveBtnText">Gửi đơn nghỉ phép mới</span>
+                    </button>
+                    <!-- Inline Leave Form -->
+                    <div id="leaveFormContainer" class="bg-card p-6 shadow-card"
+                        style="display: none; margin-top: 1.5rem; border: 1px solid #e5e7eb; border-radius: 0.75rem;">
+                        <h3
+                            style="margin-bottom: 1.5rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-envelope-open-text" style="color: hsl(var(--portal-primary));"></i> Tạo Đơn
+                            Nghỉ Phép
+                        </h3>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                            <div class="portal-form-group">
+                                <label>Ngày bắt đầu</label>
+                                <input type="date" id="leaveStartDate" class="portal-input">
+                                <div id="leaveStartDateError" class="error-text"></div>
+                            </div>
+                            <div class="portal-form-group">
+                                <label>Ngày kết thúc</label>
+                                <input type="date" id="leaveEndDate" class="portal-input">
+                                <div id="leaveEndDateError" class="error-text"></div>
+                            </div>
+                            <div class="portal-form-group">
+                                <label>Loại nghỉ phép</label>
+                                <select id="leaveType" class="portal-select">
+                                    <option value="annual">Nghỉ phép năm</option>
+                                    <option value="sick">Nghỉ ốm</option>
+                                    <option value="unpaid">Nghỉ không lương</option>
+                                </select>
+                                <div id="leaveTypeError" class="error-text"></div>
+                            </div>
+                        </div>
+                        <div class="portal-form-group" style="margin-bottom: 1.5rem;">
+                            <label>Lý do nghỉ phép</label>
+                            <textarea id="leaveReason" class="portal-textarea" rows="3"
+                                placeholder="Vui lòng mô tả lý do nghỉ phép của bạn..."></textarea>
+                            <div id="leaveReasonError" class="error-text"></div>
+                        </div>
+                        <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                            <button class="btn-premium btn-premium-secondary" onclick="toggleLeaveForm()">Hủy</button>
+                            <button class="btn-premium btn-premium-primary" onclick="submitLeave()">Gửi yêu cầu</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card p-6 shadow-card">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Kỳ nghỉ</th>
+                                <th>Số ngày</th>
+                                <th>Loại</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaveTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Salary View -->
+            <div id="salary-tab" class="tab-content transition-fade" style="display: none;">
+                <div class="portal-header">
+                    <h1 class="portal-title">Bảng Lương & Thu Nhập</h1>
+                    <p class="portal-subtitle">Theo dõi chi tiết lương, phụ cấp và lịch sử thanh toán</p>
+                </div>
+
+                <!-- Latest Salary Detail Card (Payslip Style) -->
+                <div class="salary-detail-container">
+                    <div class="salary-detail-card primary">
+                        <div class="salary-detail-label">Lương Cơ Bản</div>
+                        <div class="salary-detail-value" id="salaryBase">--</div>
+                    </div>
+                    <div class="salary-detail-card success">
+                        <div class="salary-detail-label">Tổng Phụ Cấp</div>
+                        <div class="salary-detail-value" id="salaryAllowance">--</div>
+                    </div>
+                    <div class="salary-detail-card danger">
+                        <div class="salary-detail-label">Tổng Khấu Trừ</div>
+                        <div class="salary-detail-value" id="salaryDeduction">--</div>
+                    </div>
+                </div>
+
+                <div class="bg-card p-6 shadow-card">
+                    <h3 style="margin-bottom: 1.5rem; font-weight: 700; color: #1e293b;">Lịch sử nhận lương</h3>
+                    <div class="modern-table-container">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Kỳ Lương</th>
+                                    <th>Lương Cơ Bản</th>
+                                    <th>Phụ Cấp</th>
+                                    <th>Khấu Trừ</th>
+                                    <th>Thực Lĩnh</th>
+                                    <th>Trạng Thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salaryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile View -->
+            <div id="profile-tab" class="tab-content transition-fade" style="display: none;">
+                <div class="portal-header"
+                    style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1 class="portal-title">Hồ Sơ Cá Nhân</h1>
+                        <p class="portal-subtitle">Quản lý thông tin cá nhân và tài liệu nhân sự của bạn</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-premium btn-premium-secondary" onclick="toggleEditProfileForm()"
+                            id="toggleEditProfileBtn">
+                            <i class="fas fa-edit"></i> Chỉnh sửa
+                        </button>
+                        <button class="btn-premium btn-premium-primary" onclick="toggleUploadDocumentForm()"
+                            id="toggleUploadDocBtn">
+                            <i class="fas fa-upload"></i> Tải tài liệu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inline Edit Profile Form -->
+                <div id="editProfileFormContainer" class="bg-card p-6 shadow-card"
+                    style="display: none; margin-bottom: 2rem; border: 1px solid #e5e7eb; border-radius: 0.75rem;">
+                    <h3
+                        style="margin-bottom: 1.5rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-edit" style="color: hsl(var(--portal-primary));"></i> Cập nhật thông tin
+                    </h3>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="portal-form-group">
+                            <label>Số điện thoại</label>
+                            <input type="tel" id="editPhone" class="portal-input">
+                        </div>
+                        <div class="portal-form-group">
+                            <label>Ngày sinh</label>
+                            <input type="date" id="editBirthday" class="portal-input">
+                        </div>
+                    </div>
+                    <div class="portal-form-group" style="margin-bottom: 1.5rem;">
+                        <label>Địa chỉ</label>
+                        <textarea id="editAddress" class="portal-textarea" rows="2"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                        <button class="btn-premium btn-premium-secondary" onclick="toggleEditProfileForm()">Hủy</button>
+                        <button class="btn-premium btn-premium-primary" onclick="saveProfileChanges()">Lưu thay
+                            đổi</button>
+                    </div>
+                </div>
+
+                <!-- Inline Upload Document Form -->
+                <div id="uploadDocumentFormContainer" class="bg-card p-6 shadow-card"
+                    style="display: none; margin-bottom: 2rem; border: 1px solid #e5e7eb; border-radius: 0.75rem;">
+                    <h3
+                        style="margin-bottom: 1.5rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-file-upload" style="color: hsl(var(--portal-primary));"></i> Tải lên tài liệu
+                        mới
+                    </h3>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="portal-form-group">
+                            <label>Tên tài liệu</label>
+                            <input type="text" id="docName" class="portal-input" placeholder="Ví dụ: CCCD mặt trước">
+                            <div id="docNameError" class="error-text"></div>
+                        </div>
+                        <div class="portal-form-group">
+                            <label>Loại tài liệu</label>
+                            <select id="docType" class="portal-select">
+                                <option value="identification">Giấy tờ tùy thân</option>
+                                <option value="certificate">Bằng cấp</option>
+                                <option value="other">Loại khác</option>
+                            </select>
+                            <div id="docTypeError" class="error-text"></div>
+                        </div>
+                    </div>
+                    <div class="portal-form-group" style="margin-bottom: 1rem;">
+                        <label>Chọn file</label>
+                        <input type="file" id="docFile" class="portal-input" onchange="handleDocFileSelect(event)">
+                        <input type="hidden" id="docFileType" value="pdf">
+                        <div id="docFileError" class="error-text"></div>
+                    </div>
+                    <div id="docFilePreview" style="margin-bottom: 1.5rem;"></div>
+                    <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                        <button class="btn-premium btn-premium-secondary"
+                            onclick="toggleUploadDocumentForm()">Hủy</button>
+                        <button class="btn-premium btn-premium-primary" onclick="saveDocument()">Tải lên ngay</button>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3
+                        style="margin-bottom: 1.5rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-address-card" style="color: hsl(var(--portal-primary));"></i> Thông tin chi
+                        tiết
+                    </h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-fingerprint"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Mã nhân viên</span>
+                                <span class="info-value" id="displayId">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-user-tag"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Họ và tên</span>
+                                <span class="info-value" id="displayName">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Email công việc</span>
+                                <span class="info-value" id="displayEmail">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-phone"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Số điện thoại</span>
+                                <span class="info-value" id="displayPhone">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-building"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Phòng ban</span>
+                                <span class="info-value" id="displayDepartment">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-briefcase"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Chức vụ</span>
+                                <span class="info-value" id="displayPosition">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-birthday-cake"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Ngày sinh</span>
+                                <span class="info-value" id="displayBirthday">--</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="info-content">
+                                <span class="info-label">Địa chỉ tạm trú</span>
+                                <span class="info-value" id="displayAddress">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card" style="margin-top: 2rem;">
+                    <h3
+                        style="margin-bottom: 1.5rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-file-alt" style="color: hsl(var(--portal-primary));"></i> Tài liệu cá nhân
+                    </h3>
+                    <div id="profileDocumentsGrid" class="document-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                        <!-- Documents will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals (Đã được chuyển thành Form Inline) -->
+
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/truongphong.js"></script>
+
+    <script>
+        // Override default container logic for full-width layout
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar-container');
+            if (sidebar) sidebar.style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý KPI & Hiệu suất - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <div id="sidebar-container"></div>
+        <main class="main-content">
+            <div id="header-container"></div>
+            <div class="content-wrapper">
+                <div class="page-title-section">
+                    <h1>Quản lý KPI & Hiệu suất</h1>
+                    <p>Thiết lập chỉ tiêu và đánh giá năng lực nhân viên hàng tháng</p>
+                </div>
+
+                <div class="stats-overview" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;"><i
+                                class="fas fa-bullseye"></i></div>
+                        <div class="stat-info">
+                            <h3>Chỉ tiêu trung bình</h3>
+                            <p id="avgKpi">85%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0;">Danh sách KPI Tháng</h3>
+                        <button class="btn-primary" onclick="openCreateKpiModal()">
+                            <i class="fas fa-plus"></i> Thiết lập KPI mới
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    <th>Tháng/Năm</th>
+                                    <th>Chỉ tiêu (KPI)</th>
+                                    <th>Tiến độ</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kpiTable">
+                                <!-- Data injected by kpi.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create KPI Modal -->
+    <div class="modal-overlay" id="kpiModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="modalTitle">Thiết lập KPI</h3>
+                <button class="close-modal" onclick="closeKpiModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="kpiForm">
+                    <input type="hidden" id="kpiId">
+                    <div class="form-group">
+                        <label>Nhân viên</label>
+                        <select id="kpiEmployeeId" class="form-control" required>
+                            <!-- Employees populated by kpi.js -->
+                        </select>
+                    </div>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Tháng</label>
+                            <input type="month" id="kpiMonth" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mục tiêu (%)</label>
+                            <input type="number" id="kpiTarget" class="form-control" min="1" max="100" value="100"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả chỉ tiêu</label>
+                        <textarea id="kpiDescription" class="form-control" rows="3"
+                            placeholder="Ví dụ: Hoàn thành 10 dự án, Đi làm đầy đủ..." required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeKpiModal()">Hủy</button>
+                <button class="btn-primary" onclick="saveKpis()">Lưu chỉ tiêu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/kpi.js"></script>
+</body>
+
+</html>

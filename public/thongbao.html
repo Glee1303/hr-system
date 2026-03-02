@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Báo Hệ Thống - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/thongbao.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <div class="content-wrapper">
+                <!-- Page Title -->
+                <div class="page-title-section"
+                    style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 2rem;">
+                    <div>
+                        <h1>Thông báo hệ thống</h1>
+                        <p>Quản lý và theo dõi các thông báo quan trọng đến toàn thể nhân viên</p>
+                    </div>
+                    <button class="btn-primary admin-only" id="btnCreateNotice" onclick="toggleNoticeForm()">
+                        <i class="fas fa-plus"></i> Tạo thông báo mới
+                    </button>
+                </div>
+
+                <!-- Admin: Create Notice Form -->
+                <div id="noticeFormContainer" class="form-premium-container"
+                    style="display: none; margin-bottom: 2rem;">
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Gửi Thông Báo Mới</span>
+                            <button onclick="toggleNoticeForm()"
+                                style="margin-left: auto; background: none; border: none; color: #94a3b8; cursor: pointer;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="portal-form-group" style="grid-column: 1 / -1;">
+                                <label>Tiêu đề thông báo *</label>
+                                <input type="text" id="noticeTitle" class="portal-input"
+                                    placeholder="VD: Thông báo nghỉ lễ, Họp định kỳ...">
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="portal-form-group">
+                                <label>Đối tượng nhận *</label>
+                                <select id="noticeTarget" class="portal-select" onchange="handleTargetChange()">
+                                    <option value="all">Tất cả nhân viên</option>
+                                    <option value="department">Theo phòng ban</option>
+                                    <option value="individual">Cá nhân cụ thể</option>
+                                </select>
+                            </div>
+                            <div class="portal-form-group" id="targetDetailGroup" style="display: none;">
+                                <label id="targetDetailLabel">Chọn chi tiết</label>
+                                <select id="noticeTargetId" class="portal-select"></select>
+                            </div>
+                        </div>
+
+                        <div class="portal-form-group" style="margin-top: 1rem;">
+                            <label>Nội dung chi tiết *</label>
+                            <textarea id="noticeContent" class="portal-textarea" rows="6"
+                                placeholder="Nhập nội dung thông báo tại đây..."></textarea>
+                        </div>
+
+                        <div class="form-grid" style="margin-top: 1rem;">
+                            <div class="portal-form-group">
+                                <label>Đính kèm tệp tin (Tùy chọn)</label>
+                                <input type="file" id="noticeAttachment" class="portal-input" style="padding: 0.5rem;"
+                                    onchange="handleFileSelect(event)">
+                            </div>
+                            <div class="portal-form-group">
+                                <label>Loại thông báo</label>
+                                <select id="noticeType" class="portal-select">
+                                    <option value="info">Tin tức chung</option>
+                                    <option value="success">Thành tích / Khen thưởng</option>
+                                    <option value="warning">Cảnh báo / Nhắc nhở</option>
+                                    <option value="error">Khẩn cấp</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="filePreview" style="margin-top: 1rem;"></div>
+
+                        <div
+                            style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                            <button class="btn-secondary" onclick="toggleNoticeForm()" style="min-width: 120px;">Hủy
+                                bỏ</button>
+                            <button class="btn-primary" onclick="sendNotification()" style="min-width: 160px;">
+                                <i class="fas fa-share-square"></i> Phát hành thông báo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification List Container -->
+                <div class="notice-layout">
+                    <!-- Statistics (Quick view) -->
+                    <div class="notice-stats-grid">
+                        <div class="notice-stat-card">
+                            <span class="notice-stat-label">Chưa đọc</span>
+                            <span class="notice-stat-value unread-count">0</span>
+                        </div>
+                        <div class="notice-stat-card">
+                            <span class="notice-stat-label">Tổng số</span>
+                            <span class="notice-stat-value total-count">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Main List -->
+                    <div class="notice-list-container">
+                        <div class="list-header">
+                            <div class="flex-row">
+                                <button class="filter-tab active" data-filter="all">Tất cả</button>
+                                <button class="filter-tab" data-filter="unread">Chưa đọc</button>
+                                <button class="filter-tab" data-filter="sent">Đã gửi (Admin)</button>
+                            </div>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchNotice" placeholder="Tìm kiếm thông báo...">
+                            </div>
+                        </div>
+
+                        <div id="noticeList" class="notice-items">
+                            <!-- Items go here -->
+                            <div class="notice-loading">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                                <span>Đang tải thông báo...</span>
+                            </div>
+                        </div>
+
+                        <div id="paginationNotice" class="pagination-footer"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/thongbao.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Tuyển Dụng - HRM Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <link rel="stylesheet" href="css/tuyendung.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <div class="content-wrapper">
+                <!-- Page Title -->
+                <div class="page-title-section"
+                    style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                    <div>
+                        <h1>Quản lý tuyển dụng</h1>
+                        <p>Theo dõi các vị trí tuyển dụng và ứng viên</p>
+                    </div>
+                    <button class="btn-primary" onclick="toggleCandidateForm()">
+                        <i class="fas fa-plus"></i> Đăng ký ứng viên
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="stats-card">
+                        <div class="stats-icon gradient-primary" style="background: #eff6ff; color: #2563eb;">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Vị trí mở</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon" style="background: #fafaf9; color: #57534e; border: 1px solid #e7e5e4;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Ứng viên</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon gradient-warning" style="background: #fff7ed; color: #ea580c;">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Đang phỏng vấn</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon gradient-success" style="background: #f0fdf4; color: #16a34a;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3 class="stats-value">-</h3>
+                            <p class="stats-label">Đã tuyển</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inline Form Container -->
+                <div id="inlineCandidateFormContainer" style="display: none; max-width: 1200px; margin: 0 auto;"></div>
+
+                <!-- Main Recruitment Content -->
+                <div class="recruitment-explorer" style="display: flex; flex-direction: column; gap: 2rem;">
+
+                    <!-- Top section: Boards -->
+                    <div class="kanban-scroll-wrapper" style="overflow-x: auto; padding-bottom: 1rem;">
+                        <div class="kanban-board">
+                            <!-- Column 1: Mới ứng tuyển -->
+                            <div class="kanban-column" id="col-applied">
+                                <div class="kanban-column-header">
+                                    <div class="header-main">
+                                        <i class="fas fa-inbox"></i>
+                                        <h3>Mới ứng tuyển</h3>
+                                    </div>
+                                    <span class="count-badge" id="count-applied">0</span>
+                                </div>
+                                <div class="kanban-list" id="list-applied"></div>
+                            </div>
+
+                            <!-- Column 2: Phỏng vấn -->
+                            <div class="kanban-column" id="col-interview">
+                                <div class="kanban-column-header">
+                                    <div class="header-main">
+                                        <i class="fas fa-comments"></i>
+                                        <h3>Phỏng vấn</h3>
+                                    </div>
+                                    <span class="count-badge" id="count-interview">0</span>
+                                </div>
+                                <div class="kanban-list" id="list-interview"></div>
+                            </div>
+
+                            <!-- Column 3: Đề nghị (Offer) -->
+                            <div class="kanban-column" id="col-offer">
+                                <div class="kanban-column-header">
+                                    <div class="header-main">
+                                        <i class="fas fa-file-signature"></i>
+                                        <h3>Đề nghị</h3>
+                                    </div>
+                                    <span class="count-badge" id="count-offer">0</span>
+                                </div>
+                                <div class="kanban-list" id="list-offer"></div>
+                            </div>
+
+                            <!-- Column 4: Hoàn tất -->
+                            <div class="kanban-column" id="col-hired">
+                                <div class="kanban-column-header">
+                                    <div class="header-main">
+                                        <i class="fas fa-user-check"></i>
+                                        <h3>Tiếp nhận</h3>
+                                    </div>
+                                    <span class="count-badge" id="count-hired">0</span>
+                                </div>
+                                <div class="kanban-list" id="list-hired"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom section: Analytics & Active Jobs (Placeholder for now) -->
+                    <div class="recruitment-footer-grid"
+                        style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                        <div class="bg-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Vị trí đang tuyển</h3>
+                            </div>
+                            <div class="job-list-premium" id="job-list" style="padding: 1.5rem;">
+                                <!-- Dynamic Job List -->
+                            </div>
+                        </div>
+                        <div class="bg-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Hoạt động</h3>
+                            </div>
+                            <div class="activity-log-premium"
+                                style="padding: 1.5rem; color: #64748b; font-size: 0.875rem;">
+                                <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                                    <div
+                                        style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; margin-top: 5px;">
+                                    </div>
+                                    <p>Ứng viên <b>Nguyễn Văn A</b> vừa ứng tuyển vào vị trí <b>Frontend Developer</b>
+                                    </p>
+                                </div>
+                                <div style="display: flex; gap: 0.75rem;">
+                                    <div
+                                        style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; margin-top: 5px;">
+                                    </div>
+                                    <p>Phỏng vấn <b>Lê Thị B</b> hoàn tất - Trạng thái: <b>Đạt</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- SortableJS library -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api-manager.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/pages/tuyendung.js"></script>
+</body>
+
+</html>

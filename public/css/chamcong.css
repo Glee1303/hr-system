@@ -1,0 +1,62 @@
+/* Custom Styles for Cham Cong */
+.cham-cong-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 1.5rem;
+}
+
+.calendar-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.calendar-header {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #0f172a;
+}
+
+.calendar-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.calendar-table th {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+    padding-bottom: 1rem;
+}
+
+.calendar-table td {
+    height: 40px;
+    width: 40px;
+    font-size: 0.875rem;
+    color: #334155;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.calendar-table td:hover {
+    background-color: #f1f5f9;
+}
+
+.calendar-table td.active-day {
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+}
+
+.calendar-table td.empty {
+    cursor: default;
+}
+
+.calendar-table td.empty:hover {
+    background-color: transparent;
+}
