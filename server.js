@@ -2078,27 +2078,30 @@ app.delete('/api/notifications/:id', verifyToken, async (req, res) => {
   }
 });
 
-// --- LEAVE ACCRUAL LOGIC ---
-async function runLeaveAccrual() {
-  console.log('Running monthly leave accrual...');
-  const employees = await Employee.find({ status: 'active' });
-  for (const emp of employees) {
-    const currentLeave = Number(emp.availableLeave) || 0;
-    await Employee.findByIdAndUpdate(emp._id, {
-      availableLeave: currentLeave + 1,
-      lastAccrualDate: new Date()
-    }, { new: true });
+// Only run intervals in non-serverless environments
+if (!process.env.VERCEL) {
+  // --- LEAVE ACCRUAL LOGIC ---
+  async function runLeaveAccrual() {
+    console.log('Running monthly leave accrual...');
+    const employees = await Employee.find({ status: 'active' });
+    for (const emp of employees) {
+      const currentLeave = Number(emp.availableLeave) || 0;
+      await Employee.findByIdAndUpdate(emp._id, {
+        availableLeave: currentLeave + 1,
+        lastAccrualDate: new Date()
+      }, { new: true });
+    }
+    console.log(`Accrued leave for ${employees.length} employees.`);
   }
-  console.log(`Accrued leave for ${employees.length} employees.`);
-}
 
-// Simple interval-based check
-setInterval(async () => {
-  const now = new Date();
-  if (now.getDate() === 1 && now.getHours() === 0) {
-    await runLeaveAccrual();
-  }
-}, 3600000); // Check every hour
+  // Simple interval-based check
+  setInterval(async () => {
+    const now = new Date();
+    if (now.getDate() === 1 && now.getHours() === 0) {
+      await runLeaveAccrual();
+    }
+  }, 3600000); // Check every hour
+}
 
 // --- BACKUP SYSTEM ---
 const backupsDir = path.join(__dirname, 'backups');
@@ -2132,24 +2135,32 @@ async function runAutoBackup() {
   }
 }
 
-// Chạy sao lưu mỗi 24 giờ
-setInterval(runAutoBackup, 24 * 60 * 60 * 1000);
-// Chạy thử lần đầu sau 1 phút khởi động
-setTimeout(runAutoBackup, 60 * 1000);
+// Only run backup in non-serverless environments
+if (!process.env.VERCEL) {
+  // Chạy sao lưu mỗi 24 giờ
+  setInterval(runAutoBackup, 24 * 60 * 60 * 1000);
+  // Chạy thử lần đầu sau 1 phút khởi động
+  setTimeout(runAutoBackup, 60 * 1000);
+}
 
-// Khởi động server
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`
-🚀 Hệ thống HRM đang chạy tại:
-   - Local:    http://localhost:${PORT}
-   - Mạng:     http://0.0.0.0:${PORT} (Truy cập từ máy khác qua IP của máy này)
-  `);
-});
+// Khởi động server (Chỉ chạy khi không ở môi trường Vercel)
+if (!process.env.VERCEL) {
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`
+  🚀 Hệ thống HRM đang chạy tại:
+     - Local:    http://localhost:${PORT}
+     - Mạng:     http://0.0.0.0:${PORT} (Truy cập từ máy khác qua IP của máy này)
+    `);
+  });
 
-server.on('error', (e) => {
-  if (e.code === 'EADDRINUSE') {
-    console.log(`Port ${PORT} is already in use. Assuming server is already running.`);
-  } else {
-    console.error('Server error:', e);
-  }
-});
+  server.on('error', (e) => {
+    if (e.code === 'EADDRINUSE') {
+      console.log(`Port ${PORT} is already in use. Assuming server is already running.`);
+    } else {
+      console.error('Server error:', e);
+    }
+  });
+}
+
+// Export app cho Vercel
+module.exports = app;
