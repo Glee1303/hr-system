@@ -8,8 +8,27 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const Datastore = require('nedb-promises');
+const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const ZKLib = require('node-zklib');
+
+// --- Cấu hình MongoDB (Dành cho Vercel/Cloud) ---
+const MONGODB_URI = process.env.MONGODB_URI;
+let isMongoDB = false;
+
+if (MONGODB_URI && !MONGODB_URI.includes('localhost')) {
+  mongoose.connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then(() => {
+    console.log('✅ Connected to MongoDB Atlas');
+    isMongoDB = true;
+  }).catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+  });
+} else {
+  console.log('ℹ️ Using local NeDB storage');
+}
 
 // --- Cấu hình Email ---
 const transporter = nodemailer.createTransport({
@@ -90,41 +109,85 @@ class BaseWrapper {
 }
 
 function createModel(dbName) {
-  const dbPath = path.join(dataDir, `${dbName}.db`);
-  const db = Datastore.create({
-    filename: dbPath,
-    autoload: true,
-    timestampData: true // Tự động thêm createdAt và updatedAt
-  });
-  class Model extends BaseWrapper {
-    constructor(data) { super(db, data); }
-    static get db() { return db; }
-    static find(query = {}) { return db.find(query); }
-    static findOne(query) { return db.findOne(query); }
-    static findById(id) { return db.findOne({ _id: id }); }
-    static async create(data) { return await db.insert(data); }
-    static async findByIdAndUpdate(id, update, options) {
-      const returnUpdated = options && options.new;
-      await db.update({ _id: id }, update, options);
-      return returnUpdated ? await db.findOne({ _id: id }) : null;
+  if (isMongoDB || (MONGODB_URI && !MONGODB_URI.includes('localhost'))) {
+    // MongoDB Implementation using Mongoose
+    const schema = new mongoose.Schema({}, { strict: false, timestamps: true });
+    const MongooseModel = mongoose.models[dbName] || mongoose.model(dbName, schema);
+
+    class Model {
+      constructor(data) {
+        this._doc = new MongooseModel(data);
+        Object.assign(this, data);
+      }
+      async save() {
+        const saved = await this._doc.save();
+        Object.assign(this, saved.toObject());
+        return this;
+      }
+      static get db() { return MongooseModel; }
+      static find(query = {}) { return MongooseModel.find(query).lean(); }
+      static findOne(query) { return MongooseModel.findOne(query).lean(); }
+      static findById(id) {
+        if (typeof id === 'string' && id.length === 24) return MongooseModel.findById(id).lean();
+        return MongooseModel.findOne({ _id: id }).lean();
+      }
+      static async create(data) {
+        return await MongooseModel.create(data).then(doc => doc.toObject());
+      }
+      static async findByIdAndUpdate(id, update, options) {
+        const query = (typeof id === 'string' && id.length === 24) ? { _id: id } : { _id: id };
+        return await MongooseModel.findOneAndUpdate(query, update, { ...options, new: true }).lean();
+      }
+      static async findOneAndUpdate(query, update, options) {
+        return await MongooseModel.findOneAndUpdate(query, update, { ...options, new: true }).lean();
+      }
+      static async findByIdAndDelete(id) {
+        const query = (typeof id === 'string' && id.length === 24) ? { _id: id } : { _id: id };
+        return await MongooseModel.findOneAndDelete(query).lean();
+      }
+      static async deleteMany(query) { return await MongooseModel.deleteMany(query); }
+      static async countDocuments(query) { return await MongooseModel.countDocuments(query); }
+      static lean() { return this; }
     }
-    static async findOneAndUpdate(query, update, options) {
-      const returnUpdated = options && options.new;
-      const doc = await db.findOne(query);
-      if (!doc) return null;
-      await db.update(query, update, options);
-      return returnUpdated ? await db.findOne({ _id: doc._id }) : doc;
+    return Model;
+  } else {
+    // Existing NeDB Implementation
+    const dbPath = path.join(dataDir, `${dbName}.db`);
+    const db = Datastore.create({
+      filename: dbPath,
+      autoload: true,
+      timestampData: true
+    });
+    class Model extends BaseWrapper {
+      constructor(data) { super(db, data); }
+      static get db() { return db; }
+      static find(query = {}) { return db.find(query); }
+      static findOne(query) { return db.findOne(query); }
+      static findById(id) { return db.findOne({ _id: id }); }
+      static async create(data) { return await db.insert(data); }
+      static async findByIdAndUpdate(id, update, options) {
+        const returnUpdated = options && options.new;
+        await db.update({ _id: id }, update, options);
+        return returnUpdated ? await db.findOne({ _id: id }) : null;
+      }
+      static async findOneAndUpdate(query, update, options) {
+        const returnUpdated = options && options.new;
+        const doc = await db.findOne(query);
+        if (!doc) return null;
+        await db.update(query, update, options);
+        return returnUpdated ? await db.findOne({ _id: doc._id }) : doc;
+      }
+      static async findByIdAndDelete(id) {
+        const doc = await db.findOne({ _id: id });
+        await db.remove({ _id: id }, {});
+        return doc;
+      }
+      static async deleteMany(query) { return db.remove(query, { multi: true }); }
+      static async countDocuments(query) { return db.count(query); }
+      static lean() { return this; }
     }
-    static async findByIdAndDelete(id) {
-      const doc = await db.findOne({ _id: id });
-      await db.remove({ _id: id }, {});
-      return doc;
-    }
-    static async deleteMany(query) { return db.remove(query, { multi: true }); }
-    static async countDocuments(query) { return db.count(query); }
-    static lean() { return this; }
+    return Model;
   }
-  return Model;
 }
 
 const User = createModel('users');
@@ -143,7 +206,7 @@ const Candidate = createModel('candidates');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hr-system';
+// MONGODB_URI đã được định nghĩa ở trên
 const JWT_SECRET = process.env.JWT_SECRET || 'test-key-123';
 
 // xử lý request

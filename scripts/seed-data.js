@@ -1,16 +1,35 @@
 const Datastore = require('nedb-promises');
+const mongoose = require('mongoose');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 
+require('dotenv').config();
+
 const dataDir = path.join(__dirname, '..', 'data');
+const MONGODB_URI = process.env.MONGODB_URI;
+let isMongoDB = false;
 
 function createModel(dbName) {
-    return Datastore.create({
+    if (MONGODB_URI && !MONGODB_URI.includes('localhost')) {
+        isMongoDB = true;
+        const schema = new mongoose.Schema({}, { strict: false, timestamps: true });
+        const MongooseModel = mongoose.models[dbName] || mongoose.model(dbName, schema);
+
+        // Unified API for seeder
+        return {
+            insert: (data) => Array.isArray(data) ? MongooseModel.insertMany(data) : MongooseModel.create(data),
+            remove: (query, options) => MongooseModel.deleteMany(query),
+            find: (query) => MongooseModel.find(query).lean()
+        };
+    }
+
+    const db = Datastore.create({
         filename: path.join(dataDir, `${dbName}.db`),
         autoload: true,
         timestampData: true
     });
+    return db;
 }
 
 const User = createModel('users');
@@ -26,6 +45,11 @@ const Notification = createModel('notifications');
 
 async function seed() {
     console.log('🌱 Starting Professional Model Seeder...');
+
+    if (isMongoDB) {
+        await mongoose.connect(MONGODB_URI);
+        console.log('🔌 Connected to MongoDB for seeding');
+    }
 
     // 0. Clear old data for a clean model state
     await Promise.all([
@@ -168,7 +192,7 @@ async function seed() {
             days: 2,
             reason: 'Bị cảm cúm nặng',
             status: 'approved',
-            createdAt: new Date(now.setDate(now.getDate() - 6))
+            createdAt: new Date()
         },
         {
             employeeId: allEmps[7]._id,
@@ -273,6 +297,7 @@ async function seed() {
     console.log(`✅ Seeded ${notifs.length} notifications`);
 
     console.log('✨ All systems go! Model dataset is ready.');
+    if (isMongoDB) mongoose.disconnect();
     process.exit(0);
 }
 
