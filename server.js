@@ -249,6 +249,9 @@ function broadcastSync(type, payload = {}) {
 }
 
 app.get('/api/sync/stream', (req, res) => {
+  if (process.env.VERCEL) {
+    return res.status(204).end(); // Vercel doesn't support SSE well in standard serverless functions
+  }
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');

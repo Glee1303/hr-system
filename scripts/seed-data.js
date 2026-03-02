@@ -302,6 +302,10 @@ async function seed() {
 }
 
 seed().catch(err => {
-    console.error('❌ Seeding failed:', err);
+    console.error('❌ Seeding failed:', err.message);
+    if (err.message.includes('Authentication failed')) {
+        console.error('👉 LỖI XÁC THỰC: Vui lòng kiểm tra lại Username và Password trong Connection String.');
+        console.error('   Đảm bảo bạn đã thay <password> bằng SOZ5Gy5yFxbFbt9X');
+    }
     process.exit(1);
 });
